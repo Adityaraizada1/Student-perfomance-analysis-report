@@ -1,0 +1,26 @@
+library(ggplot2)
+library(dplyr)
+
+# Create Dataset
+set.seed(42)
+n <- 100
+
+student_data <- data.frame(
+  StudentID = 1:n,
+  StudyHours = rnorm(n, mean = 5, sd = 2),
+  Attendance = runif(n, min = 60, max = 100),
+  Major = sample(c("CSE", "ECE", "ME", "MBA"), n, replace = TRUE)
+)
+
+# Calculate CGPA with correlation logic
+student_data$CGPA <- 0.4 * student_data$StudyHours +
+                     0.05 * student_data$Attendance +
+                     rnorm(n, sd = 0.5)
+
+student_data$CGPA <- pmin(pmax(student_data$CGPA, 0), 10)
+
+# Visualization 1: Scatter Plot
+ggplot(student_data, aes(x = StudyHours, y = CGPA, color = Major)) +
+  geom_point(size = 3) +
+  geom_smooth(method = "lm", color = "black") +
+  theme_minimal()
